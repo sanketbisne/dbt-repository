@@ -1,0 +1,30 @@
+# Default values for dbt-cron chart.
+
+nameOverride: "agg-dbt-cron"
+fullnameOverride: "agg-dbt-cron"
+
+cronjob:
+  # Kubernetes CronJob schedule. Runs every 2 minutes.
+  schedule: "*/2 * * * *"
+  # The dbt commands will run to completion. If they take longer than the schedule,
+  # new jobs will be skipped until the current one finishes.
+  concurrencyPolicy: "Forbid"
+  # Number of successful/failed jobs to keep in history.
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+
+image:
+  repository: europe-west2-docker.pkg.dev/sanket-project-381504/agg-dbt-repo/agg-dbt-repo
+  tag: v9
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  # Specifies whether a service account should be created.
+  create: false
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: "agg-dbt-sa"
+  annotations:
+    # IMPORTANT: Link the Kubernetes Service Account to the Google Service Account
+    # Replace this with your GSA email address.
+    iam.gke.io/gcp-service-account: agg-dbt-sa@$PROJECT_ID.iam.gserviceaccount.com

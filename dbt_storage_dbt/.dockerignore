@@ -1,0 +1,6 @@
+# Ignore files not needed in the final image to keep it small
+# and to avoid invalidating the cache unnecessarily.
+Dockerfile
+.git
+.gitignore
+helm/

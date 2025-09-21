@@ -1,0 +1,13 @@
+dbt_storage_dbt:
+  outputs:
+    dev:
+      type: bigquery
+      method: oauth
+      project: $GCP_PROJECT_ID
+      dataset: $GCP_BQ_DATASET_NAME
+      threads: 1
+      job_retries: 1
+      location: EU
+      priority: interactive
+      job_execution_timeout_seconds: 300
+  target: dev
