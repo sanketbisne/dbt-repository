@@ -133,3 +133,27 @@ helm install <RELEASE_NAME> . -n <NAMESPACE>
 - **Uninstall:** `helm uninstall <RELEASE_NAME> -n <NAMESPACE>`
 
 ---
+
+## Deployment in Air-Gapped Environments
+
+Deploying this project in a highly secure environment (e.g., private cluster, no internet) requires additional configuration.
+
+### 1. Private Python Packages
+
+If `pypi.org` is blocked, `pip` must be configured to use an internal repository like Nexus.
+
+- Create a `pip.conf` file in the project root with the URL of your internal repository.
+- The `Dockerfile` is already configured to copy this file to the correct location (`/etc/pip.conf`) in the image.
+
+### 2. Google API Connectivity
+
+For pods to reach Google APIs (BigQuery, IAM) without internet access, your GKE cluster's subnet must be configured with **Private Google Access**. This allows traffic to flow to Google services over Google's internal network. This is an infrastructure task for your cloud networking team.
+
+### 3. Docker Image Distribution
+
+The GKE cluster must be able to pull the Docker image from an internal container registry.
+
+1.  **Push to Internal Registry:** After building the image, push it to your organization's private registry (e.g., Nexus, Harbor, or a private Artifact Registry).
+2.  **Update Helm Values:** Modify the `image.repository` value in `helm/dbt-cron/values.yaml` to point to the image's location in the internal registry.
+
+With these changes, the same dbt project can be securely and reliably deployed in environments with strict network controls.

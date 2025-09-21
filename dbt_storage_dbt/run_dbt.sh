@@ -7,12 +7,9 @@ set -e
 # This is a good practice before running models.
 echo "--- Running dbt debug ---"
 dbt debug
-
+ 
+echo "--- Running dbt models ---"
 dbt run
-
+ 
+echo "--- Running dbt tests ---"
 dbt test
-
-
-
-
-
